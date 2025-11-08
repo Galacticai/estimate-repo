@@ -16,7 +16,7 @@
     "build": "npm run clean && npm run build:linux",
     "build:linux": "npm run bundle && pkg dist/bundle.cjs --targets node18-linux-x64 --public --compress GZip --output dist/estimate-repo-linux",
     "build:macos": "npm run clean && npm run bundle && pkg dist/bundle.cjs --targets node18-macos-x64 --public --compress GZip --output dist/estimate-repo-macos",
-    "build:windows": "npm run clean && npm run bundle && pkg dist/bundle.cjs --targets node18-win-x64 --public --compress GZip --output dist/estimate-repo-win.exe",
+    "build:windows": "npm run clean && npm run bundle && pkg dist/bundle.cjs --targets node18-win-x64 --public --compress GZip --output dist/estimate-repo-windows.exe",
     "build:all": "npm run clean && npm run bundle && pkg dist/bundle.cjs --targets node18-linux-x64,node18-macos-x64,node18-win-x64 --public --compress GZip --out-path dist"
   },
   "pkg": {
