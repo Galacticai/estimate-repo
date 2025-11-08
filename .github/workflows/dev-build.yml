@@ -1,0 +1,92 @@
+name: Development Build
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - '**.md'
+      - '.gitignore'
+
+jobs:
+  check-dev:
+    runs-on: ubuntu-latest
+    outputs:
+      should_build: ${{ steps.check.outputs.should_build }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Check if dev build (not a release commit)
+        id: check
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          echo "Commit message: $COMMIT_MSG"
+
+          if [[ "$COMMIT_MSG" =~ ^release:\ .* ]]; then
+            echo "should_build=false" >> $GITHUB_OUTPUT
+            echo "This is a release commit, skipping dev build"
+          else
+            echo "should_build=true" >> $GITHUB_OUTPUT
+            echo "This is a dev commit, will create dev build"
+          fi
+
+  build-dev:
+    needs: check-dev
+    if: needs.check-dev.outputs.should_build == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build all binaries
+        run: npm run build:all
+
+      - name: List built files
+        run: ls -lh dist/
+
+      - name: Get short commit SHA
+        id: sha
+        run: echo "short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Delete existing dev release and tag
+        run: |
+          gh release delete dev --yes || true
+          git push origin :refs/tags/dev || true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Development Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: dev
+          name: "Development Build (latest-dev)"
+          draft: false
+          prerelease: true
+          generate_release_notes: true
+          body: |
+            ## ⚠️ Development Build
+
+            This is an automated development build from the latest commit.
+
+            **Commit:** ${{ steps.sha.outputs.short }}
+            **Status:** Unstable - Use at your own risk
+
+            For stable releases, see the [Latest Release](https://github.com/${{ github.repository }}/releases/latest)
+          files: |
+            dist/estimate-repo-linux-x64
+            dist/estimate-repo-macos-x64
+            dist/estimate-repo-win-x64.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
