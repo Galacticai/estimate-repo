@@ -9,6 +9,8 @@
   },
   "scripts": {
     "start": "node src/index.js",
+    "format": "prettier --write \"src/**/*.js\"",
+    "format:check": "prettier --check \"src/**/*.js\"",
     "clean": "rm -rf dist",
     "bundle": "esbuild src/index.js --bundle --platform=node --format=cjs --outfile=dist/bundle.cjs --banner:js='#!/usr/bin/env node'",
     "build": "npm run clean && npm run build:linux",
@@ -35,6 +37,7 @@
   "license": "GPL-3.0-or-later",
   "devDependencies": {
     "esbuild": "^0.25.12",
-    "pkg": "^5.8.1"
+    "pkg": "^5.8.1",
+    "prettier": "^3.6.2"
   }
 }

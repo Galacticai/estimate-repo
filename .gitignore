@@ -5,15 +5,16 @@ yarn.lock
 # Build output
 dist/
 
-# Generated estimation
-estimation/
+# Generated estimation (output directory only)
+/estimation/
 
 # OS
 .DS_Store
 Thumbs.db
 
 # IDE
-.vscode/
+.vscode/*
+!.vscode/settings.json
 .idea/
 *.swp
 *.swo

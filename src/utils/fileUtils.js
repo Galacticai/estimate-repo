@@ -2,7 +2,7 @@
  * File utility functions
  */
 
-import fs from 'fs';
+import fs from "fs";
 
 /**
  * Sanitize a filename for cross-platform compatibility
@@ -12,11 +12,11 @@ import fs from 'fs';
  */
 export function sanitizeFilename(name) {
   return name
-    .replace(/[\/\\]/g, '-')           // Replace path separators
-    .replace(/[\[\]]/g, '')            // Remove brackets
-    .replace(/[<>:"|?*@]/g, '')        // Remove Windows-incompatible chars + @
-    .replace(/\s+/g, ' ')              // Normalize multiple spaces to single space
-    .trim();                           // Remove leading/trailing spaces
+    .replace(/[\/\\]/g, "-") // Replace path separators
+    .replace(/[\[\]]/g, "") // Remove brackets
+    .replace(/[<>:"|?*@]/g, "") // Remove Windows-incompatible chars + @
+    .replace(/\s+/g, " ") // Normalize multiple spaces to single space
+    .trim(); // Remove leading/trailing spaces
 }
 
 /**
@@ -25,7 +25,7 @@ export function sanitizeFilename(name) {
  */
 export function ensureDirectory(dirPath) {
   if (!fs.existsSync(dirPath)) {
-      fs.mkdirSync(dirPath, { recursive: true });
+    fs.mkdirSync(dirPath, { recursive: true });
   }
 }
 
