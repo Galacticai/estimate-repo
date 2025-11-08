@@ -5,8 +5,8 @@ on:
     branches:
       - master
     paths-ignore:
-      - '**.md'
-      - '.gitignore'
+      - "**.md"
+      - ".gitignore"
   workflow_dispatch:
 
 jobs:
@@ -52,14 +52,20 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
+          node-version: "18"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
 
       - name: Build all binaries
         run: npm run build:all
+
+      - name: Rename binaries
+        run: |
+          mv dist/bundle-linux dist/estimate-repo-linux
+          mv dist/bundle-macos dist/estimate-repo-macos
+          mv dist/bundle-win.exe dist/estimate-repo-windows.exe
 
       - name: List built files
         run: ls -lh dist/
@@ -94,8 +100,8 @@ jobs:
 
             For stable releases, see the [Latest Release](https://github.com/${{ github.repository }}/releases/latest)
           files: |
-            dist/bundle-linux
-            dist/bundle-macos
-            dist/bundle-win.exe
+            dist/estimate-repo-linux
+            dist/estimate-repo-macos
+            dist/estimate-repo-windows.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

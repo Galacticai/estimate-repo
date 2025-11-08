@@ -5,8 +5,8 @@ on:
     branches:
       - master
     paths-ignore:
-      - '**.md'
-      - '.gitignore'
+      - "**.md"
+      - ".gitignore"
   workflow_dispatch:
 
 jobs:
@@ -57,8 +57,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
+          node-version: "18"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -66,8 +66,18 @@ jobs:
       - name: Build all binaries
         run: npm run build:all
 
+      - name: Rename binaries
+        run: |
+          mv dist/bundle-linux dist/estimate-repo-linux
+          mv dist/bundle-macos dist/estimate-repo-macos
+          mv dist/bundle-win.exe dist/estimate-repo-windows.exe
+
       - name: List built files
         run: ls -lh dist/
+
+      - name: Get short commit SHA
+        id: sha
+        run: echo "short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - name: Create Stable Release
         uses: softprops/action-gh-release@v1
@@ -79,16 +89,12 @@ jobs:
           generate_release_notes: true
           make_latest: true
           body: |
-            ## ✅ Stable Release
-
-            This is a stable release, recommended for production use.
+            Automatically built from commit [${{ steps.sha.outputs.short }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
 
             **Version:** ${{ needs.check-release.outputs.version }}
-
-            ### Release Notes
           files: |
-            dist/bundle-linux
-            dist/bundle-macos
-            dist/bundle-win.exe
+            dist/estimate-repo-linux
+            dist/estimate-repo-macos
+            dist/estimate-repo-windows.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
