@@ -1,0 +1,39 @@
+{
+  "name": "estimate-repo",
+  "version": "1.0.0",
+  "description": "Git repository work hour estimation tool",
+  "type": "module",
+  "main": "src/index.js",
+  "bin": {
+    "estimate-repo": "./src/index.js"
+  },
+  "scripts": {
+    "clean": "rm -rf dist",
+    "bundle": "esbuild src/index.js --bundle --platform=node --format=cjs --outfile=dist/bundle.cjs --banner:js='#!/usr/bin/env node'",
+    "build": "npm run clean && npm run build:linux",
+    "build:linux": "npm run bundle && pkg dist/bundle.cjs --targets node18-linux-x64 --public --compress GZip --output dist/estimate-repo-linux",
+    "build:macos": "npm run clean && npm run bundle && pkg dist/bundle.cjs --targets node18-macos-x64 --public --compress GZip --output dist/estimate-repo-macos",
+    "build:windows": "npm run clean && npm run bundle && pkg dist/bundle.cjs --targets node18-win-x64 --public --compress GZip --output dist/estimate-repo-win.exe",
+    "build:all": "npm run clean && npm run bundle && pkg dist/bundle.cjs --targets node18-linux-x64,node18-macos-x64,node18-win-x64 --public --compress GZip --out-path dist"
+  },
+  "pkg": {
+    "targets": [
+      "node18-linux-x64",
+      "node18-macos-x64",
+      "node18-win-x64"
+    ],
+    "outputPath": "dist",
+    "assets": [
+      "dist/bundle.cjs"
+    ],
+    "scripts": [
+      "dist/bundle.cjs"
+    ]
+  },
+  "author": "galacticai",
+  "license": "GPL-3.0-or-later",
+  "devDependencies": {
+    "esbuild": "^0.25.12",
+    "pkg": "^5.8.1"
+  }
+}
