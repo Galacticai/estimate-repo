@@ -103,6 +103,18 @@ estimate-repo /path/to/repository
       "email": "john@example.com",
       "commits": 150,
       "hours": 487.5
+    },
+    {
+      "developer": "Jane Smith",
+      "email": "jane@example.com",
+      "commits": 98,
+      "hours": 312.0
+    },
+    {
+      "developer": "Bob Johnson",
+      "email": "bob@example.com",
+      "commits": 72,
+      "hours": 166.0
     }
   ]
 }
