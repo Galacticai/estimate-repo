@@ -1,4 +1,4 @@
-name: Release
+name: Stable Release
 
 on:
   push:
@@ -59,14 +59,23 @@ jobs:
       - name: List built files
         run: ls -lh dist/
 
-      - name: Create Release
+      - name: Create Stable Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ needs.check-release.outputs.version }}
-          name: Release v${{ needs.check-release.outputs.version }}
+          name: "v${{ needs.check-release.outputs.version }} (Stable)"
           draft: false
           prerelease: false
           generate_release_notes: true
+          make_latest: true
+          body: |
+            ## ✅ Stable Release
+
+            This is a stable release, recommended for production use.
+
+            **Version:** ${{ needs.check-release.outputs.version }}
+
+            ### Release Notes
           files: |
             dist/estimate-repo-linux-x64
             dist/estimate-repo-macos-x64
