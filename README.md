@@ -4,6 +4,16 @@ CLI tool that estimates work hours from Git commit history using multi-factor an
 
 ---
 
+## ⚠️ Important Disclaimer
+
+### **This tool provides ESTIMATES only, not actual time tracking.**
+
+_The calculations are based on algorithmic heuristics (lines changed, commit types, file counts) and do not reflect the real time developers spent working. Use these numbers as rough approximations for planning purposes, not as accurate time records._
+
+### **In short, this uses math to guess, not black magic.**
+
+---
+
 ## Features
 
 - Analyzes any Git repository
@@ -49,6 +59,7 @@ estimate-repo /path/to/repository
 - `_summary.json` - Aggregated totals
 
 **Per-developer output:**
+
 ```json
 {
   "developer": "John Doe",
@@ -78,6 +89,7 @@ estimate-repo /path/to/repository
 ```
 
 **Summary output:**
+
 ```json
 {
   "generatedAt": "2024-11-08T15:30:00.000Z",
@@ -131,10 +143,10 @@ estimate-repo /path/to/repository
 **File Type:**
 | Type | Multiplier |
 |------|------------|
-| Code files* | 1.1× |
+| Code files\* | 1.1× |
 | Config/docs (md, json, txt, etc) | 1.0× |
 
-*Code: js, ts, py, java, go, rb, php, c, cpp, rs, kt, swift, etc.
+\*Code: js, ts, py, java, go, rb, php, c, cpp, rs, kt, swift, etc.
 
 Max 16h per commit, rounded to 0.25h
 
