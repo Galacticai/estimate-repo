@@ -7,6 +7,7 @@ on:
     paths-ignore:
       - '**.md'
       - '.gitignore'
+  workflow_dispatch:
 
 jobs:
   check-dev:
@@ -21,6 +22,13 @@ jobs:
       - name: Check if dev build (not a release commit)
         id: check
         run: |
+          # Always build on manual trigger
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "should_build=true" >> $GITHUB_OUTPUT
+            echo "Manual trigger - will create dev build"
+            exit 0
+          fi
+
           COMMIT_MSG=$(git log -1 --pretty=%B)
           echo "Commit message: $COMMIT_MSG"
 
@@ -81,12 +89,13 @@ jobs:
             This is an automated development build from the latest commit.
 
             **Commit:** ${{ steps.sha.outputs.short }}
-            **Status:** Unstable - Use at your own risk
+
+            Use at your own risk.
 
             For stable releases, see the [Latest Release](https://github.com/${{ github.repository }}/releases/latest)
           files: |
-            dist/estimate-repo-linux-x64
-            dist/estimate-repo-macos-x64
-            dist/estimate-repo-win-x64.exe
+            dist/bundle-linux
+            dist/bundle-macos
+            dist/bundle-win.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

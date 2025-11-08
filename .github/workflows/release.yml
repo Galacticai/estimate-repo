@@ -7,6 +7,7 @@ on:
     paths-ignore:
       - '**.md'
       - '.gitignore'
+  workflow_dispatch:
 
 jobs:
   check-release:
@@ -22,6 +23,15 @@ jobs:
       - name: Check if release commit
         id: check
         run: |
+          # Always release on manual trigger
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "should_release=true" >> $GITHUB_OUTPUT
+            VERSION=$(node -p "require('./package.json').version")
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "Manual trigger - will create release for version $VERSION"
+            exit 0
+          fi
+
           COMMIT_MSG=$(git log -1 --pretty=%B)
           echo "Commit message: $COMMIT_MSG"
 
@@ -77,8 +87,8 @@ jobs:
 
             ### Release Notes
           files: |
-            dist/estimate-repo-linux-x64
-            dist/estimate-repo-macos-x64
-            dist/estimate-repo-win-x64.exe
+            dist/bundle-linux
+            dist/bundle-macos
+            dist/bundle-win.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
